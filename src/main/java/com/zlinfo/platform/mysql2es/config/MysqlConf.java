@@ -8,6 +8,69 @@ public class MysqlConf {
     private String sql;
     private int recordId;
     private String id;
+    private String clusterName;
+    private String host;
+    private int port;
+    private String indexTable;
+    private String updateById;
+    private String updateByTime;
+    private int bulkSize;
+
+    public int getBulkSize() {
+        return bulkSize;
+    }
+
+    public void setBulkSize(int bulkSize) {
+        this.bulkSize = bulkSize;
+    }
+
+    public String getUpdateById() {
+        return updateById;
+    }
+
+    public void setUpdateById(String updateById) {
+        this.updateById = updateById;
+    }
+
+    public String getUpdateByTime() {
+        return updateByTime;
+    }
+
+    public void setUpdateByTime(String updateByTime) {
+        this.updateByTime = updateByTime;
+    }
+
+    public String getIndexTable() {
+        return indexTable;
+    }
+
+    public void setIndexTable(String indexTable) {
+        this.indexTable = indexTable;
+    }
+
+    public String getClusterName() {
+        return clusterName;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setClusterName(String clusterName) {
+        this.clusterName = clusterName;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
 
     public int getRecordId() {
         return recordId;

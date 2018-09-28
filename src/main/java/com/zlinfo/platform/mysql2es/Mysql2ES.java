@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by zhulinfeng on 2018/9/26.
@@ -24,13 +27,22 @@ public class Mysql2ES {
         String user = conf.getUsername();
         String passwd = conf.getPassword();
         String sql = conf.getSql();
-        int recordId = conf.getRecordId();
-        String id = conf.getId();
+
         LOGGER.info("mysql config is :");
         LOGGER.info("\t\tDriver : " + driver + "\n\t\tURL : " + url + "\n\t\tUSER : "
                 + user + "\n\t\tPASSWORD : " + passwd + "\n\t\tSQL : " + sql);
-        Mysql mysql = new Mysql();
-        Connection connection = mysql.getConnection(driver, url, user, passwd);
+        Connection connection = Mysql.getConnection(driver, url, user, passwd);
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                IncrementalUpdateById.start(connection, conf, sql);
+                IncrementalUpdateByTime.start(connection, conf, sql);
+            }
+        };
+
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleAtFixedRate(runnable, 10, 2, TimeUnit.SECONDS);
     }
 
 }

@@ -65,11 +65,11 @@ public class MixAllUtils {
     public static Properties file2Properties(final String filePath) {
         Properties properties = new Properties();
         File file = new File(filePath);
-        FileInputStream inputStream = null;
+        InputStream inputStream = null;
         BufferedInputStream buffer = null;
 
         try {
-            inputStream = new FileInputStream(file);
+            inputStream = ClassLoader.getSystemResourceAsStream(filePath);
             buffer = new BufferedInputStream(inputStream);
             properties.load(new InputStreamReader(buffer, "utf-8"));
         } catch (IOException e) {
@@ -82,6 +82,6 @@ public class MixAllUtils {
                 e.printStackTrace();
             }
         }
-        return  properties;
+        return properties;
     }
 }
