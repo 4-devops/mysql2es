@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -33,6 +35,9 @@ public class Mysql2ES {
                 + user + "\n\t\tPASSWORD : " + passwd + "\n\t\tSQL : " + sql);
         Connection connection = Mysql.getConnection(driver, url, user, passwd);
 
+        //System.out.println(System.currentTimeMillis());
+        //System.exit(1);
+
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -42,7 +47,7 @@ public class Mysql2ES {
         };
 
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleAtFixedRate(runnable, 10, 2, TimeUnit.SECONDS);
+        service.scheduleAtFixedRate(runnable, 2, 2, TimeUnit.SECONDS);
     }
 
 }

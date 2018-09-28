@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8">
-      <module name="mysql2es" target="1.5" />
+      <module name="mysql2es" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>

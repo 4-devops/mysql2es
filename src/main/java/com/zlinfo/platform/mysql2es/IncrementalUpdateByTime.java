@@ -15,7 +15,9 @@ public class IncrementalUpdateByTime {
     private static final Logger LOGGER = LoggerFactory.getLogger(IncrementalUpdateByTime.class);
 
     public static void start(Connection connection, MysqlConf conf, String sql) {
-        String lastIdSQL = "select es_db_name, es_table_name, last_update_time from " + conf.getIndexTable() + "where id=" + conf.getRecordId();
+        String lastIdSQL = "select es_db_name, es_table_name, last_update_time from " + conf.getIndexTable() + " where id=" + conf.getRecordId();
+        //System.out.println(lastIdSQL);
+        //System.exit(1);
         List<Map<String, Object>> record = Mysql.getData(connection,lastIdSQL);
         int last_update_time = Integer.parseInt(String.valueOf(record.get(0).get("last_update_time")));
         String esIndex = String.valueOf(record.get(0).get("es_db_name"));
