@@ -58,6 +58,40 @@ public class Mysql {
         return list;
     }
 
+    public static Map<String, String> getMapping (Connection conn, String dbName) {
+        Map<String, String> typeMap = new HashMap<>();
+        String descSQL = "select * from " + dbName + " limit 1";
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            statement = conn.prepareStatement(descSQL);
+            resultSet = statement.executeQuery();
+            ResultSetMetaData metaData = resultSet.getMetaData();
+
+            int col_nums = metaData.getColumnCount();
+
+            while (resultSet.next()) {
+                for (int i = 0; i < col_nums; i++) {
+                    String col_name = metaData.getColumnName(i + 1);
+                    String col_type = metaData.getColumnTypeName(i + 1);
+                    typeMap.put(col_name, col_type);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        //System.out.println(typeMap);
+        return typeMap;
+    }
+
     public static void update(Connection connection, String sql) {
         try {
             Statement statement = connection.createStatement();

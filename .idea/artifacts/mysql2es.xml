@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="mysql2es">
+    <output-path>$PROJECT_DIR$/out/artifacts/mysql2es</output-path>
+    <root id="archive" name="mysql2es.jar">
+      <element id="module-output" name="mysql2es" />
+    </root>
+  </artifact>
+</component>

@@ -1,13 +1,15 @@
 package com.zlinfo.platform.mysql2es;
 
 import com.zlinfo.platform.mysql2es.config.MysqlConf;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.TransportAddress;
+import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Map;
 
 public class ES {
 
@@ -23,7 +25,7 @@ public class ES {
             synchronized (TransportClient.class) {
                 try {
                     client = new PreBuiltTransportClient(settings)
-                            .addTransportAddress(new TransportAddress(InetAddress.getByName(conf.getHost()),
+                            .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(conf.getHost()),
                                     conf.getPort()));
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
@@ -31,5 +33,21 @@ public class ES {
             }
         }
         return client;
+    }
+
+    public static void createIndex(TransportClient client, String index,
+                                   String type, Map<String, String> schemaMap) {
+        CreateIndexRequestBuilder requestBuilder = client.admin()
+                .indices().prepareCreate(index);
+        for (String key : schemaMap.keySet()) {
+            String fieldType = "keyword";
+            String tmpType = schemaMap.get(key);
+            if (tmpType.equals("INT")) {
+                fieldType = "integer";
+            } else if (tmpType.equals("DATE")) {
+                fieldType = "date";
+            }
+            schemaMap.put(key, fieldType);
+        }
     }
 }

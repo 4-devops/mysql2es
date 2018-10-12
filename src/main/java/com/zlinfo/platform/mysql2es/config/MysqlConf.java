@@ -15,6 +15,15 @@ public class MysqlConf {
     private String updateById;
     private String updateByTime;
     private int bulkSize;
+    private String version;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
     public int getBulkSize() {
         return bulkSize;

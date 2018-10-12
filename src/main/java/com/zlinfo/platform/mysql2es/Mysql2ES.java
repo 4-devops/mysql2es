@@ -2,16 +2,12 @@ package com.zlinfo.platform.mysql2es;
 
 import com.zlinfo.platform.mysql2es.config.MysqlConf;
 import com.zlinfo.platform.mysql2es.utils.MixAllUtils;
+import org.elasticsearch.client.transport.TransportClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Properties;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by zhulinfeng on 2018/9/26.
@@ -30,24 +26,25 @@ public class Mysql2ES {
         String passwd = conf.getPassword();
         String sql = conf.getSql();
 
-        LOGGER.info("mysql config is :");
-        LOGGER.info("\t\tDriver : " + driver + "\n\t\tURL : " + url + "\n\t\tUSER : "
-                + user + "\n\t\tPASSWORD : " + passwd + "\n\t\tSQL : " + sql);
+        TransportClient client = ES.getSingleClient(conf);
+
+        LOGGER.info("the configuration of this application is : \n\t" +
+                "Driver : " + driver + "\n\t" +
+                "Url : " + url + "\n\t" +
+                "User : " + user + "\n\t" +
+                "Password : " + passwd + "\n\t" +
+                "SQL : " + sql);
         Connection connection = Mysql.getConnection(driver, url, user, passwd);
 
-        //System.out.println(System.currentTimeMillis());
-        //System.exit(1);
-
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                IncrementalUpdateById.start(connection, conf, sql);
-                IncrementalUpdateByTime.start(connection, conf, sql);
+        while (true) {
+            try {
+                IncrementalUpdateById.start(connection, conf, sql, client);
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        };
+        }
 
-        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleAtFixedRate(runnable, 2, 2, TimeUnit.SECONDS);
     }
 
 }
